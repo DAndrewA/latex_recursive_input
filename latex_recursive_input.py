@@ -1,7 +1,7 @@
 import os
 
 def get_file_contents(root: str, fname: str) -> str:
-    """Function that opens a .tex file, and then recursively builds a string containing the contents of the file, including all contents of \input tags.
+    """Function that opens a .tex file, and then recursively builds a string containing the contents of the file, including all contents of \\input tags.
     fname should have the .tex filetype
     """
     fpath = os.path.join(root, fname)
@@ -12,7 +12,6 @@ def get_file_contents(root: str, fname: str) -> str:
             if r"\input{" in line:
                 input_fname = line.split('{')[1].split('}')[0]
                 line = get_file_contents(root=root, fname=input_fname + ".tex")
-            else: line += "\n"
             file_buffer += line
     return file_buffer
 
@@ -22,7 +21,7 @@ def main():
     parser = argparse.ArgumentParser(prog="latex_recursive_input")
     parser.add_argument("--root", type=str, required=True, help=HELP_DICT["root"])
     parser.add_argument("--main", type=str, required=True, help=HELP_DICT["main"])
-    parser.add_argument("-output", type=str, required=False, help=HELP_DICT["output"])
+    parser.add_argument("--output", type=str, required=False, help=HELP_DICT["output"])
 
     args = parser.parse_args()
 
@@ -30,7 +29,7 @@ def main():
     main = args.main
     output = args.output
 
-    file_contents = get_file_contents(root=root, main=main)
+    file_contents = get_file_contents(root=root, fname=main)
 
     if output is None:
         print(file_contents)
