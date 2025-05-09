@@ -10,8 +10,10 @@ def get_file_contents(root: str, fname: str) -> str:
         file_buffer = ""
         for line in f.readlines():
             if r"\input{" in line:
-                input_fname = line.split('{')[1].split('}')[0]
-                line = get_file_contents(root=root, fname=input_fname + ".tex")
+                input_split = line.split(r"\input{", 1)
+                if "%" not in input_split[0]:
+                    input_fname = input_split[1].split("}")[0]
+                    line = get_file_contents(root=root, fname=input_fname + ".tex")
             file_buffer += line
     return file_buffer
 
